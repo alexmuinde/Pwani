@@ -175,14 +175,20 @@ export default function Header() {
           </li>
           <Link to="/profile">
             {currentUser ? (
-              <img
-                src={currentUser.avatar}
-                alt="Profile"
-                className="rounded-full mx-auto block sm:mx-0 sm:shrink-0 h-10 w-10 cursor-pointer border border-blue-700 object-cover shadow-sm hover:scale-102 transition-transform"
-              />
-            ) : (
-              <li className="sm:inline text-slate-700 hover:text-blue-500 font-medium">Login</li>
-            )}
+  <Link to="/profile">
+    <img
+      src={currentUser.avatar}
+      alt="Profile"
+      className="rounded-full mx-auto block sm:mx-0 sm:shrink-0 h-10 w-10 cursor-pointer border border-blue-700 object-cover shadow-sm hover:scale-102 transition-transform"
+    />
+  </Link>
+) : (
+  <Link to="/login">
+    <li className="sm:inline text-slate-700 hover:text-blue-500 font-medium">
+      Login
+    </li>
+  </Link>
+)}
           </Link>
         </ul>
       </div>
