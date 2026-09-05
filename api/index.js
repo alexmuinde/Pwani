@@ -2,12 +2,12 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
+import path from 'path'
 
 // Route Imports
 import userRoute from './routes/userRoute.js'
 import authRoute from './routes/authRoute.js'
 import createDocRoute from './routes/createDocRoute.js'
-
 
 dotenv.config()
 
@@ -23,6 +23,9 @@ mongoose
 
 const app = express()
 
+// Set root path (one level up from /api)
+const __dirname = path.resolve()
+
 // Global Middleware
 app.use(express.json())
 app.use(cookieParser())
@@ -32,6 +35,13 @@ app.use('/api/users', userRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/createDoc', createDocRoute)
 
+// Serve Static Files (Vite uses client/dist, CRA uses client/build)
+app.use(express.static(path.join(__dirname, '/client/dist')))
+
+// Catch-All Route for Frontend SPA Routing
+app.get('/*splat', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
+})
 
 // Global Error Handler Middleware
 app.use((err, req, res, next) => {

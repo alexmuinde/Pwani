@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Edible oil truck transporter backend",
   "main": "api/index.js",
+  "type": "module",
   "scripts": {
+    "dev": "nodemon api/index.js",
     "start": "node api/index.js",
-    "dev": "nodemon api/index.js"
+    "build": "npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
     "type": "git",
@@ -14,7 +16,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/alexmuinde/Pwani/issues"
   },
