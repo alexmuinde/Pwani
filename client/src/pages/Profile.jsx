@@ -43,7 +43,7 @@ export default function Profile() {
       } catch (err) {
         setDocError('Failed to fetch user documents.');
         setDocLoading(false);
-      };
+      }
     };
 
     if (currentUser?._id) {
@@ -77,9 +77,11 @@ export default function Profile() {
     }
   };
 
-  // Format dynamic display title for document card
+  // Format dynamic display title for document card including all document types
   const getDocumentTitle = (doc) => {
     if (doc.docType === 'truckBookingReport') return 'TRUCK BOOKING REPORT';
+    if (doc.docType === 'truckBookingList') return 'TRUCK BOOKING LIST';
+    if (doc.docType === 'truckDocument') return 'TRUCK DOCUMENT';
     return doc.docType?.toUpperCase() || 'DOCUMENT';
   };
 
@@ -94,14 +96,29 @@ export default function Profile() {
       if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
       if (doc.destination) fields.push({ label: 'Destination', value: doc.destination });
       if (doc.bookingDate) fields.push({ label: 'Date', value: doc.bookingDate });
-
-      return fields.slice(0, 3);
+    } else if (doc.docType === 'truckBookingList') {
+      if (doc.clientName) fields.push({ label: 'Client', value: doc.clientName });
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.trailerNumber) fields.push({ label: 'Trailer No', value: doc.trailerNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.destination) fields.push({ label: 'Destination', value: doc.destination });
+    } else if (doc.docType === 'truckDocument') {
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.trailerNumber) fields.push({ label: 'Trailer No', value: doc.trailerNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.idNumber) fields.push({ label: 'ID No', value: doc.idNumber });
+      if (doc.phoneNumber) fields.push({ label: 'Phone', value: doc.phoneNumber });
+    } else {
+      // Fallback for general models
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
     }
 
-    // Fallback for general models
-    if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
-    if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
-    if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
+    // Always pad array to ensure 3 grid preview slots exist
+    while (fields.length < 3) {
+      fields.push({ label: '—', value: 'N/A' });
+    }
 
     return fields.slice(0, 3);
   };

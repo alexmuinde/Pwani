@@ -8,13 +8,17 @@ import {
 } from '../controllers/genericController.js';
 
 import TruckBookingReport from '../models/truckBookingReportModel.js';
+import TruckBookingList from '../models/truckBookingListModel.js';
+import TruckDocument from '../models/truckDocumentModel.js';
 import verifyToken from '../utils/verifyUser.js';
 
 const router = express.Router();
 
-// Register all project models here as you add more transporter documents
+// Register all project models here so global endpoints process every document type
 const allDocumentModels = {
   truckBookingReport: TruckBookingReport,
+  truckBookingList: TruckBookingList,
+  truckDocument: TruckDocument,
 };
 
 // Global Document Routes
@@ -26,5 +30,15 @@ router.get('/userDocuments/:id', verifyToken, getUserDocuments(allDocumentModels
 router.post('/truckBookingReport', verifyToken, genericUpsert(TruckBookingReport));
 router.put('/truckBookingReport/:id', verifyToken, genericUpsert(TruckBookingReport));
 router.get('/truckBookingReport/get/:id', verifyToken, genericGetDoc(TruckBookingReport));
+
+// Truck Booking List Routes
+router.post('/truckBookingList', verifyToken, genericUpsert(TruckBookingList));
+router.put('/truckBookingList/:id', verifyToken, genericUpsert(TruckBookingList));
+router.get('/truckBookingList/get/:id', verifyToken, genericGetDoc(TruckBookingList));
+
+// Truck Document Routes
+router.post('/truckDocument', verifyToken, genericUpsert(TruckDocument));
+router.put('/truckDocument/:id', verifyToken, genericUpsert(TruckDocument));
+router.get('/truckDocument/get/:id', verifyToken, genericGetDoc(TruckDocument));
 
 export default router;

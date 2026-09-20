@@ -37,13 +37,15 @@ export default function Home() {
     fetchAllDocuments();
   }, []);
 
-  // Format dynamic title for document cards
+  // Format dynamic title for document cards including all document types
   const getDocumentTitle = (doc) => {
     if (doc.docType === 'truckBookingReport') return 'TRUCK BOOKING REPORT';
+    if (doc.docType === 'truckBookingList') return 'TRUCK BOOKING LIST';
+    if (doc.docType === 'truckDocument') return 'TRUCK DOCUMENT';
     return doc.docType?.toUpperCase() || 'DOCUMENT';
   };
 
-  // Extract relevant field key-value pairs for card preview
+  // Extract up to 3 field key-value pairs for card preview
   const getSummaryFields = (doc) => {
     const fields = [];
 
@@ -54,14 +56,29 @@ export default function Home() {
       if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
       if (doc.destination) fields.push({ label: 'Destination', value: doc.destination });
       if (doc.bookingDate) fields.push({ label: 'Date', value: doc.bookingDate });
-
-      return fields.slice(0, 3);
+    } else if (doc.docType === 'truckBookingList') {
+      if (doc.clientName) fields.push({ label: 'Client', value: doc.clientName });
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.trailerNumber) fields.push({ label: 'Trailer No', value: doc.trailerNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.destination) fields.push({ label: 'Destination', value: doc.destination });
+    } else if (doc.docType === 'truckDocument') {
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.trailerNumber) fields.push({ label: 'Trailer No', value: doc.trailerNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.idNumber) fields.push({ label: 'ID No', value: doc.idNumber });
+      if (doc.phoneNumber) fields.push({ label: 'Phone', value: doc.phoneNumber });
+    } else {
+      // General Fallback
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
     }
 
-    // Fallback for generic or other document models
-    if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
-    if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
-    if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
+    // Always pad array to ensure 3 grid slots are available
+    while (fields.length < 3) {
+      fields.push({ label: '—', value: 'N/A' });
+    }
 
     return fields.slice(0, 3);
   };

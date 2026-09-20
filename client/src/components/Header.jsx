@@ -14,6 +14,8 @@ export default function Header() {
   // Available document creation route for Transporter Project
   const documentRoutes = [
     { title: 'TRUCK BOOKING REPORT', route: '/truckBookingReport' },
+    { title: 'TRUCK BOOKING LIST', route: '/truckBookingList' },
+    { title: 'TRUCK DOCUMENT', route: '/truckDocument' },
   ];
 
   const getDocumentTitle = (doc) => {
@@ -24,7 +26,6 @@ export default function Header() {
   const getSummaryFields = (doc) => {
     const fields = [];
 
-    // Mapping for Truck Booking Report schema fields
     if (doc.docType === 'truckBookingReport') {
       if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
       if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
@@ -32,14 +33,29 @@ export default function Header() {
       if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
       if (doc.destination) fields.push({ label: 'Destination', value: doc.destination });
       if (doc.bookingDate) fields.push({ label: 'Date', value: doc.bookingDate });
-
-      return fields.slice(0, 3);
+    } else if (doc.docType === 'truckBookingList') {
+      if (doc.clientName) fields.push({ label: 'Client', value: doc.clientName });
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.trailerNumber) fields.push({ label: 'Trailer No', value: doc.trailerNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.destination) fields.push({ label: 'Destination', value: doc.destination });
+    } else if (doc.docType === 'truckDocument') {
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.trailerNumber) fields.push({ label: 'Trailer No', value: doc.trailerNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.idNumber) fields.push({ label: 'ID No', value: doc.idNumber });
+      if (doc.phoneNumber) fields.push({ label: 'Phone', value: doc.phoneNumber });
+    } else {
+      // Fallback extraction
+      if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
+      if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
+      if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
     }
 
-    // Fallback extraction
-    if (doc.truckNumber) fields.push({ label: 'Truck No', value: doc.truckNumber });
-    if (doc.driverName) fields.push({ label: 'Driver', value: doc.driverName });
-    if (doc.productType) fields.push({ label: 'Product', value: doc.productType });
+    // Pad array to always maintain 3 grid fields per card
+    while (fields.length < 3) {
+      fields.push({ label: '—', value: 'N/A' });
+    }
 
     return fields.slice(0, 3);
   };
@@ -94,6 +110,7 @@ export default function Header() {
       setSearchTerm('');
       navigate(matchedDoc.route); // Opens blank form to create new record
     }
+  
   };
 
   return (
